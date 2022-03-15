@@ -7,8 +7,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 
 import "./assets/index.css";
-import Sidebar from "./Sidebar";
-import Dashboard from "./Dashboard";
+import Sidebar from "./components/Sidebar";
+import Dashboard from "./components/Dashboard";
 
 dayjs.extend(isoWeek);
 dayjs.extend(weekOfYear);

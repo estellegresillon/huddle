@@ -1,6 +1,9 @@
 import classNames from "classnames";
 import dayjs from "dayjs";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
+
+import { COLORS, EVENTS } from "utils";
 
 import CalendarNavigation from "../CalendarNavigation";
 import {
@@ -10,15 +13,13 @@ import {
   isWeekendDay,
 } from "./weeklyHelpers";
 
-// const today = dayjs().format("YYYY-MM-DD");
-// const currentWeek = dayjs().week();
-
 const WeeklyCalendar = ({
   daysInCalendar,
   onWeekChange,
   setDaysInCalendar,
   week,
 }) => {
+  const calendarRef = useRef(null);
   const firstDayOfWeek = dayjs()
     .week(week)
     .startOf("isoWeek")
@@ -32,13 +33,45 @@ const WeeklyCalendar = ({
   const handleForwardClick = () => {
     onWeekChange(week + 1);
   };
-  console.log(hoursOfTheDay);
+
+  const handleTodayClick = () => {
+    onWeekChange(dayjs().week());
+  };
+
+  useEffect(() => {
+    const ref = calendarRef.current;
+    const currentHour = parseInt(dayjs().format("H"), 10);
+    // don't stick the current hour to the very top and include borders
+    ref.scrollTop = (currentHour - 3) * 50.5;
+  }, []);
+
+  const renderContent = (calendarDay, calendarHour) => {
+    const filteredEvents = EVENTS.filter((evt) => {
+      const isSameHour = dayjs(evt.date).hour() === calendarHour;
+      const isSameDay =
+        dayjs(evt.date).format("YYYY-MM-DD") === calendarDay.dateString;
+
+      return isSameHour && isSameDay;
+    });
+
+    return filteredEvents.map((evt) => (
+      <div
+        className="hour-item-event"
+        style={{ backgroundColor: COLORS[evt.userId] }}
+        key={evt.name}
+      >
+        {evt.name}
+      </div>
+    ));
+  };
+
   return (
     <WeeklyCalendarWrapper>
       <CalendarNavigation
         daysInCalendar={daysInCalendar}
         onBackClick={handleBackClick}
         onForwardClick={handleForwardClick}
+        onTodayClick={handleTodayClick}
         setDaysInCalendar={setDaysInCalendar}
       >
         <span>{dayjs(firstDayOfWeek).format("MMMM YYYY")}</span>
@@ -50,13 +83,19 @@ const WeeklyCalendar = ({
           <div className="header-days">
             {weekDaysObject.slice(0, daysInCalendar).map((day, i) => (
               <div key={day.dateString} className="header-item">
-                {daysOfWeek[i]} {dayjs(day.dateString).format("D")}
+                <div
+                  className={classNames("header-item-wrapper", {
+                    "is-today": dayjs().format("YYYY-MM-DD") === day.dateString,
+                  })}
+                >
+                  {daysOfWeek[i]} {dayjs(day.dateString).format("D")}
+                </div>
               </div>
             ))}
           </div>
         </HeaderWrapper>
 
-        <ContentWrapper $daysInCalendar={daysInCalendar}>
+        <ContentWrapper $daysInCalendar={daysInCalendar} ref={calendarRef}>
           <div className="weekly-calendar-hours">
             {hoursOfTheDay.map((hour) => (
               <div className="hour-container" key={hour}>
@@ -73,7 +112,9 @@ const WeeklyCalendar = ({
                 })}
               >
                 {hoursOfTheDay.map((hour) => (
-                  <div className="hour-item" key={hour} />
+                  <div className="hour-item" key={hour}>
+                    {renderContent(day, hour)}
+                  </div>
                 ))}
               </div>
             ))}
@@ -127,6 +168,16 @@ const HeaderWrapper = styled.div`
       display: flex;
       justify-content: center;
       width: ${({ $daysInCalendar }) => `calc(100% / ${$daysInCalendar})`};
+
+      .header-item-wrapper {
+        &.is-today {
+          background: #3151e7;
+          border-radius: 4px;
+          color: white;
+          font-weight: bolder;
+          padding: 4px 6px;
+        }
+      }
     }
   }
 `;
@@ -147,7 +198,7 @@ const ContentWrapper = styled.div`
       display: flex;
       font-size: 12px;
       font-weight: bolder;
-      height: 70px;
+      height: 50px;
       justify-content: center;
       text-transform: uppercase;
       width: 100%;
@@ -171,8 +222,25 @@ const ContentWrapper = styled.div`
 
       .hour-item {
         border-bottom: 0.5px solid #dfdfdf;
-        height: 70px;
+        height: 50px;
         width: 100%;
+
+        .hour-item-event {
+          background: #5e79ff;
+          border-radius: 4px;
+          color: white;
+          cursor: pointer;
+          font-size: 11px;
+          font-weight: bolder;
+          margin-bottom: 3px;
+          opacity: 0.5;
+          overflow: hidden;
+          padding: 3px 5px;
+          text-align: left;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: calc(100% - 10px);
+        }
       }
     }
   }

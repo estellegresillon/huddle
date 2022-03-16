@@ -1,21 +1,17 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const MENU_ITEMS = [
-  "Activity",
-  "Calendar",
-  "Bookmarks",
-  "Budget",
-  "Notes",
-  "Chat",
-];
+const MENU_ITEMS = ["calendar", "notes", "budget", "bookmarks", "chat", "wall"];
 
 const Sidebar = () => (
   <SidebarWrapper>
-    <div className="sidebar-logo">huddle</div>
+    <div className="sidebar-logo">
+      <Link to="/">huddle</Link>
+    </div>
     <div className="sidebar-menu">
       {MENU_ITEMS.map((itm) => (
         <div key={itm} className="sidebar-menu-item">
-          {itm}
+          <Link to={itm}>{itm}</Link>
         </div>
       ))}
     </div>
@@ -49,6 +45,15 @@ const SidebarWrapper = styled.div`
     text-decoration: none;
     text-transform: uppercase;
     white-space: nowrap;
+
+    a {
+      color: #ccc9c9;
+      text-decoration: none;
+
+      &:hover {
+        color: gray;
+      }
+    }
   }
 
   .sidebar-menu {
@@ -57,10 +62,6 @@ const SidebarWrapper = styled.div`
     .sidebar-menu-item {
       font-size: 12px;
       margin: 20px 0px;
-
-      &:hover {
-        color: gray;
-      }
     }
   }
 

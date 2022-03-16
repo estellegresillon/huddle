@@ -7,8 +7,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 
 import "./assets/index.css";
+
 import Sidebar from "./components/Sidebar";
-import Dashboard from "./components/Dashboard";
+import Calendar from "./components/Calendar";
+import Notes from "./components/Notes";
+import Budget from "./components/Budget";
+import Bookmarks from "./components/Bookmarks";
+import Chat from "./components/Chat";
+import Wall from "./components/Wall";
 
 dayjs.extend(isoWeek);
 dayjs.extend(weekOfYear);
@@ -22,7 +28,13 @@ const App = () => (
     <AppWrapper>
       <Sidebar />
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Calendar />} />
+        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/notes" element={<Notes />} />
+        <Route path="/budget" element={<Budget />} />
+        <Route path="/bookmarks" element={<Bookmarks />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/wall" element={<Wall />} />
       </Routes>
     </AppWrapper>
   </BrowserRouter>

@@ -38,6 +38,15 @@ const WeeklyCalendar = ({
     onWeekChange(dayjs().week());
   };
 
+  const addEvent = (day, hour) => {
+    const newEvent = {
+      date: `${day.dateString}T${hour < 10 ? `0${hour}` : hour}:00:00.000Z`,
+      name: `Doudinsky${day.dateString}`,
+      userId: 1,
+    };
+    EVENTS.push(newEvent);
+  };
+
   useEffect(() => {
     const ref = calendarRef.current;
     const currentHour = parseInt(dayjs().format("H"), 10);
@@ -112,7 +121,11 @@ const WeeklyCalendar = ({
                 })}
               >
                 {hoursOfTheDay.map((hour) => (
-                  <div className="hour-item" key={hour}>
+                  <div
+                    className="hour-item"
+                    onClick={() => addEvent(day, hour)}
+                    key={hour}
+                  >
                     {renderContent(day, hour)}
                   </div>
                 ))}

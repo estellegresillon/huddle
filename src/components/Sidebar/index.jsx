@@ -1,19 +1,27 @@
 import styled from "styled-components";
 
+const MENU_ITEMS = [
+  "Activity",
+  "Calendar",
+  "Bookmarks",
+  "Budget",
+  "Notes",
+  "Chat",
+];
+
 const Sidebar = () => (
   <SidebarWrapper>
     <div className="sidebar-logo">huddle</div>
     <div className="sidebar-menu">
-      <div>Activity</div>
-      <div>Calendar</div>
-      <div>Bookmarks</div>
-      <div>Budget</div>
-      <div>Notes</div>
-      <div>Chat</div>
+      {MENU_ITEMS.map((itm) => (
+        <div key={itm} className="sidebar-menu-item">
+          {itm}
+        </div>
+      ))}
     </div>
     <div className="sidebar-bottom">
-      <div>Settings</div>
-      <div>Help</div>
+      <div className="sidebar-menu-item">Settings</div>
+      <div className="sidebar-menu-item">Help</div>
     </div>
   </SidebarWrapper>
 );
@@ -29,10 +37,11 @@ const SidebarWrapper = styled.div`
   justify-content: space-between;
   width: 150px;
 
-  .sidebar-logo {
+  .sidebar-logo,
+  .sidebar-menu {
     color: #ccc9c9;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bolder;
     letter-spacing: 2px;
     margin: 20px;
@@ -40,5 +49,32 @@ const SidebarWrapper = styled.div`
     text-decoration: none;
     text-transform: uppercase;
     white-space: nowrap;
+  }
+
+  .sidebar-menu {
+    text-align: left;
+
+    .sidebar-menu-item {
+      font-size: 12px;
+      margin: 20px 0px;
+
+      &:hover {
+        color: gray;
+      }
+    }
+  }
+
+  .sidebar-bottom {
+    margin-bottom: 15px;
+
+    .sidebar-menu-item {
+      cursor: pointer;
+      font-size: 13px;
+      margin: 10px 20px;
+
+      &:hover {
+        color: gray;
+      }
+    }
   }
 `;
